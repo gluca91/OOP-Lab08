@@ -10,17 +10,18 @@ import java.util.Collection;
  * This code triggers static code analyzers. You should use it to see how things
  * SHOULD NOT be done.
  *
- * @author Danilo Pianini
- * @version 1.2
  *
  */
-public class ThisIsHowThingsShouldNotBeDone {
+public final class ThisIsHowThingsShouldNotBeDone {
+
+    private ThisIsHowThingsShouldNotBeDone() {
+    }
 
     /*
      * PMD complains:
      * 
-     * This class should be final, because it is a utility class (all methods
-     * are static)
+     * This class should be final, because it is a utility class (all methods are
+     * static)
      * 
      * This class should have a private constructor, because is not meant to be
      * extended (it is an utility class)
@@ -43,13 +44,13 @@ public class ThisIsHowThingsShouldNotBeDone {
      * 
      * Missing Javadoc
      */
-    public static void main(String[] a) {
+    public static void main(final String... a) {
         /*
          * PMD Complains:
          * 
          * this variable should be final!
          */
-        Collection<Object> c = new ArrayList<>();
+        final Collection<Object> c = new ArrayList<>();
         /*
          * PMD complains:
          * 
@@ -61,14 +62,24 @@ public class ThisIsHowThingsShouldNotBeDone {
          * 
          * What does it mean "43"? It's a magic number!
          */
-        for (int i = 0; i < 43; i++)
+        // for (int i = 0; i < 43; i++)
+        // c.add(new Object());
+
+        final var ciao = 43;
+        for (int i = 0; i < ciao; i++) {
             c.add(new Object());
+        }
         /*
          * FindBugs complains
          * 
          * Slow: use clear() instead!
          */
-        c.removeAll(c);
+        // c.removeAll(c);
+        c.clear();
+
+        // SENZA QUESTA RIGA SOTTO TI AVVISA CHE QUESTO METODO SAREBBE INUTILE PERCHE'
+        // EFFETTIVAMENTE NON INTEAGISCE CON NULLA E NON DA NESSUN OUTPUT
+        System.out.println("ciao A tutto");
     }
 
 }
