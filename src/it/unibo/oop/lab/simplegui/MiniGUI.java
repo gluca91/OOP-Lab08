@@ -5,11 +5,13 @@ package it.unibo.oop.lab.simplegui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Label;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -44,7 +46,15 @@ public class MiniGUI {
         write.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                System.out.println(rng.nextInt());
+                final var value = rng.nextInt();
+                System.out.println(value);
+
+                final var btn = (JButton) e.getSource();
+                final var pnlCenter = (JPanel) btn.getParent();
+                final var pnlContainer = (JPanel) pnlCenter.getParent();
+                final var pnlNorth = (JPanel) pnlContainer.getComponent(1);
+                final var lbl = (Label) pnlNorth.getComponent(0);
+                lbl.setText(Integer.toString(value));
             }
         });
     }
@@ -52,33 +62,47 @@ public class MiniGUI {
     private void display() {
         /*
          * Make the frame one fifth the resolution of the screen. This very method is
-         * enough for a single screen setup. In case of multiple monitors, the
-         * primary is selected. In order to deal coherently with multimonitor
-         * setups, other facilities exist (see the Java documentation about this
-         * issue). It is MUCH better than manually specify the size of a window
-         * in pixel: it takes into account the current resolution.
+         * enough for a single screen setup. In case of multiple monitors, the primary
+         * is selected. In order to deal coherently with multimonitor setups, other
+         * facilities exist (see the Java documentation about this issue). It is MUCH
+         * better than manually specify the size of a window in pixel: it takes into
+         * account the current resolution.
          */
         final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         final int sw = (int) screen.getWidth();
         final int sh = (int) screen.getHeight();
         frame.setSize(sw / PROPORTION, sh / PROPORTION);
         /*
-         * Instead of appearing at (0,0), upper left corner of the screen, this
-         * flag makes the OS window manager take care of the default positioning
-         * on screen. Results may vary, but it is generally the best choice.
+         * Instead of appearing at (0,0), upper left corner of the screen, this flag
+         * makes the OS window manager take care of the default positioning on screen.
+         * Results may vary, but it is generally the best choice.
          */
         frame.setLocationByPlatform(true);
         /*
          * OK, ready to pull the frame onscreen
          */
         frame.setVisible(true);
+
+        final JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
+        centerPanel.add(frame.getContentPane().getComponent(0));
+
+        final String result = "ciciopasticcio";
+        final Label labelResult = new Label(result, Label.CENTER);
+        final JPanel northPanel = new JPanel(new BorderLayout());
+        northPanel.add(labelResult);
+
+        frame.getContentPane().add(centerPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(northPanel, BorderLayout.NORTH);
+        frame.pack();
     }
 
     /**
-     * @param args ignored
+     * @param args
+     *                 ignored
      */
     public static void main(final String... args) {
-       new MiniGUI().display();
+        new MiniGUI().display();
     }
 
 }
