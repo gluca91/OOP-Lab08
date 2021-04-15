@@ -3,6 +3,7 @@ package it.unibo.oop.lab.mvcio;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,13 +44,15 @@ public final class SimpleGUI {
      */
 
     public static void main(final String[] args) {
-        new SimpleGUI();
+        new SimpleGUI(new Controller());
     }
 
     /**
-     * builds a new {@link SimpleGUI}.
+     * 
+     * @param controller
+     *                       .
      */
-    public SimpleGUI() {
+    public SimpleGUI(final Controller controller) {
         /*
          * Make the frame half the resolution of the screen. This very method is enough
          * for a single screen setup. In case of multiple monitors, the primary is
@@ -77,7 +80,11 @@ public final class SimpleGUI {
 
             if (JOptionPane.showOptionDialog(frame, "che vogliamo fà", "questa è una finestruccia", JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, null, null) == JOptionPane.OK_OPTION) {
-
+                try {
+                    controller.addText(textArea.getText());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
 
         });
